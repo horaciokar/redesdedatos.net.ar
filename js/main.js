@@ -81,6 +81,15 @@
 
 
 	};
+//new bar
+	const navi = document.querySelector('navi');
+	const links = navi.querySelectorAll('a');
+	links.forEach(link => {
+  	link.addEventListener('click', function() {
+    links.forEach(link => link.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
 
 	// Reflect scrolling in navigation
 	var navActive = function(section) {
