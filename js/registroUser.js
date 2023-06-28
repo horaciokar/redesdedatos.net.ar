@@ -1,32 +1,45 @@
-const registroForm = document.getElementById('registroform');
-const mensajeDiv = document.getElementById('mensaje');
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const connection = require('conexion.js'); // Importar la conexión
 
-registroForm.addEventListener('submit', (event) => {
-  event.preventDefault();
+// Configurar bodyParser para poder acceder a los datos enviados en el cuerpo de la solicitud
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-  const nombre = document.getElementById('nombre').value;
-  const apellido = document.getElementById('apellido').value;
-  const correo = document.getElementById('correo').value;
-  const usuario = document.getElementById('usuario').value;
-  const contrasena = document.getElementById('contrasena').value;
+// Ruta para manejar el registro de usuarios
+app.post('/registrarUsuario', (req, res) => {
+  const { nombre, apellido, correo, usuario, contraseña } = req.body;
 
-  // Realiza la petición para guardar el usuario en el servidor
-  fetch('/registrarUsuario', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ nombre, apellido, correo, usuario, contrasena })
-  })
-  .then(response => {
-    if (response.ok) {
-      return response.json();
+  // Generar el hash de la contraseña (puedes usar bcrypt o alguna otra librería)
+  const hashContraseña = generarHashContraseña(contraseña);
+
+  // Consulta SQL para insertar el usuario en la tabla 'users'
+  const sql = 'INSERT INTO users (nombre, apellido, correo, usuario, contraseña) VALUES (?, ?, ?, ?, ?)';
+  const values = [nombre, apellido, correo, usuario, hashContraseña];
+
+  // Ejecutar la consulta SQL utilizando la conexión importada
+  connection.query(sql, values, (error, result) => {
+    if (error) {
+      console.error('Error al insertar el usuario:', error);
+      res.status(500).json({ message: 'Error al registrar el usuario' });
     } else {
-      throw new Error('Error al registrar el usuario');
+      console.log('Usuario registrado exitosamente');
+      res.status(200).json({ message: 'Usuario registrado exitosamente' });
     }
-  })
-  .catch(error => {
-    mensajeDiv.textContent = 'Error al registrar el usuario';
-    console.error('Error de red:', error);
   });
 });
+
+// Iniciar el servidor
+app.listen(3000, () => {
+  console.log('Servidor iniciado en el puerto 3000');
+});
+
+// Función para generar el hash de la contraseña (implementación de ejemplo)
+function generarHashContraseña(contraseña) {
+  // Aquí puedes utilizar una librería como bcrypt para generar el hash
+  // Por simplicidad, este es un ejemplo básico
+  const hash = require('crypto').createHash('sha256');
+  hash.update(contraseña);
+  return hash.digest('hex');
+}
