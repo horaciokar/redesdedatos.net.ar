@@ -15,7 +15,7 @@ app.post('/registrarUsuario', (req, res) => {
   const hashContraseña = generarHashContraseña(contraseña);
 
   // Consulta SQL para insertar el usuario en la tabla 'users'
-  const sql = 'INSERT INTO users (nombre, apellido, correo, usuario, contraseña) VALUES (?, ?, ?, ?, ?)';
+  const sql = 'INSERT INTO users (nombre, apellido, correo, usuario, contrasena) VALUES (?, ?, ?, ?, ?)';
   const values = [nombre, apellido, correo, usuario, hashContraseña];
 
   // Ejecutar la consulta SQL utilizando la conexión importada
