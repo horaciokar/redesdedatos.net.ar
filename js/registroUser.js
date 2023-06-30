@@ -1,7 +1,7 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const app = express();
-const connection = require('conexion.js'); // Importar la conexión
+const connection = require('./conexion.js'); // Importar la conexión
 
 // Configurar bodyParser para poder acceder a los datos enviados en el cuerpo de la solicitud
 app.use(bodyParser.urlencoded({ extended: true }));
