@@ -1,7 +1,6 @@
 // const express = require('express');
 import express from 'express';
 const mysql = require('mysql');
-
 const app = express();
 const port = 3000;
 
