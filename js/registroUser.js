@@ -1,5 +1,7 @@
+import express from 'express';
 const express = require('express');
 // const bodyParser = require('body-parser');
+//import express from 'express';
 const app = express();
 const connection = require('./conexion.js'); // Importar la conexión
 
